@@ -1,0 +1,181 @@
+<mat-toolbar color="primary">
+    <span class="toolbar-title">Lab Report Application</span>
+  </mat-toolbar>
+  
+  <mat-card class="requisition-card">
+    <div class="form-container">
+      <form (ngSubmit)="onSubmit()" class="requisition-form">
+        <h2 class="form-title">Requisition Form</h2>
+  
+        <div class="form-fields">
+          <div class="form-field">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Time Sample Taken</mat-label>
+              <mat-icon matPrefix>access_time</mat-icon>
+              <input
+                matInput
+                type="datetime-local"
+                [(ngModel)]="requisition.TimeSampleTaken"
+                name="timeSampleTaken"
+                required
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <mat-error *ngIf="!requisition.TimeSampleTaken" class="error-message">
+                Time Sample is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-field">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>First Name</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="requisition.FirstName"
+                name="firstName"
+                required
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <mat-error *ngIf="!requisition.FirstName" class="error-message">
+                First Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-field">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Surname</mat-label>
+              <mat-icon matPrefix>person_outline</mat-icon>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="requisition.Surname"
+                name="surname"
+                required
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <mat-error *ngIf="!requisition.Surname" class="error-message">
+                Surname is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-field">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Gender</mat-label>
+              <mat-icon matPrefix>wc</mat-icon>
+              <mat-select [(ngModel)]="requisition.Gender" name="gender" required>
+                <mat-option value="M">Male</mat-option>
+                <mat-option value="F">Female</mat-option>
+                <mat-option value="U">Unknown</mat-option>
+              </mat-select>
+              <mat-error *ngIf="!requisition.Gender" class="error-message">
+                Gender is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-field">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Date of Birth</mat-label>
+              <mat-icon matPrefix>calendar_today</mat-icon>
+              <input
+                matInput
+                type="date"
+                [(ngModel)]="requisition.DateOfBirth"
+                name="dateOfBirth"
+                required
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <mat-error *ngIf="!requisition.DateOfBirth" class="error-message">
+                Date of Birth is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-field">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Mobile Number</mat-label>
+              <mat-icon matPrefix>phone</mat-icon>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="requisition.MobileNumber"
+                name="mobileNumber"
+                required
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <mat-error *ngIf="!requisition.MobileNumber" class="error-message">
+                Mobile Number is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <h3 class="available-tests-title">Available Tests:</h3>
+        <ul class="test-list">
+          <li *ngFor="let test of tests">
+            <mat-checkbox [checked]="isTestSelected(test.TestId)" (change)="onTestSelectionChange(test)">
+              {{ test.Mnemonic }} - {{ test.Description }}
+            </mat-checkbox>
+          </li>
+        </ul>
+  
+        <h4 class="input-fields-title">Input Fields for Selected Tests</h4>
+        <div *ngFor="let test of requisition.RequestedTests">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Result for Test {{ test.TestId }}</mat-label>
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="test.Result"
+              (ngModelChange)="updateTestResult(test.TestId, $event)"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Comment for Test {{ test.TestId }}</mat-label>
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="test.Comment"
+              (ngModelChange)="updateTestComment(test.TestId, $event)"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </mat-form-field>
+        </div>
+  
+        <div class="button-container">
+          <button mat-raised-button color="primary" type="submit">Submit Requisition</button>
+        </div>
+      </form>
+  
+      <div class="generate-report">
+        <h2 class="generate-report-title">Generate Report</h2>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Select Format</mat-label>
+          <mat-select [(ngModel)]="format" [ngModelOptions]="{ standalone: true }">
+            <mat-option value="json">JSON</mat-option>
+            <mat-option value="text">Text</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Report Filename</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="reportFilename"
+            placeholder="Enter filename"
+            [ngModelOptions]="{ standalone: true }"
+          />
+        </mat-form-field>
+  
+        <button mat-raised-button color="accent" (click)="generateReport()">Generate Report</button>
+      </div>
+    </div>
+  </mat-card>
+  
